@@ -20,6 +20,7 @@ export default function DownloadPage() {
           <tr>
             <th scope="col">Field</th>
             <th scope="col">Value</th>
+            <th scope="col">Confidence</th>
           </tr>
         </thead>
         <tbody>
@@ -30,6 +31,7 @@ export default function DownloadPage() {
                   {key}
                 </td>
                 <td> {field.value ? field.value : "N/A"}</td>
+                <td>{field.confidence ? parseFloat(field.confidence).toFixed(2) + "%" : "N/A"}</td>
               </tr>
             )
           })}
