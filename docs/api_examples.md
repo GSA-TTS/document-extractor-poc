@@ -1,93 +1,91 @@
 # Example API Requests and Responses
 
-## Upload API
+## Upload Document
 
 ### Request
 
-```text
-POST /upload
+```http request
+POST /api/document
 ```
 
-```JSON
+```json
 {
-  "body": {
-    "file_content": "<base64-encoded-content>",
-    "file_name": "test-file.txt"
-  }
+    "file_content": "<base64-encoded content of the uploaded file>",
+    "file_name": "<name of the file>"
 }
 ```
 
 ### Response
 
-```JSON
+```json
 {
-  "resultCode": 200,
-  "resultString": "File accepted for procesing.",
-  "documentId": "1234567890abcdef1234567890abcdef"
+    "message": "File uploaded successfully.",
+    "documentId": "<random UUID>"
 }
 ```
 
-## Verify API
+## Get Document
 
 ### Request
 
-```text
-POST /verify
-```
-
-```JSON
-{
-  "documentId": "1234567890abcdef1234567890abcdef"
-}
+```http request
+GET /api/document/<document ID>
 ```
 
 ### Response
 
-```JSON
+```json
 {
-  "resultCode": 200,
-  "resultString": "Extract finished.",
-  "resultsData": {
-    "foq": "bat"
-  }
-}
-```
-
-## Update API
-
-### Request
-
-```text
-POST /update
-```
-
-```JSON
-{
-  "documentId": "1234567890abcdef1234567890abcdef",
-  "updates": [
-    {
-      "oldField": "foq",
-      "oldValue": "bat",
-      "newField": "foo",
-      "newValue": "bar"
+    "document_id": "<random UUID>",
+    "document_key": "<file path>",
+    "document_type": "<the type of document>",
+    "signed_url": "<URL to temporarily allow you to download the document>",
+    "base64_encoded_file": "<base64 encoding of the document>",
+    "extracted_data": {
+        "<key extracted from the document>": {
+            "value": "<value extracted from the document>",
+            "confidence": <decimal number 0 - 100 representing how confident the system is in the key and value being correct>
+        }
+        // ...more...
     }
-  ]
+}
+```
+
+## Update Document
+
+### Request
+
+```http request
+PUT /api/document/<document ID>
+```
+
+```json
+{
+    "extracted_data": {
+        "<key extracted from the document to update>": {
+            "value": "<value extracted from the document to update>"
+        }
+        // ...more...
+    }
 }
 ```
 
 ### Response
 
-```JSON
+```json
 {
-  "documentId": "1234567890abcdef1234567890abcdef",
-  "resultCode": 200,
-  "resultString": "Update accepted.",
-  "resultsData": {
-    "foo": "bar"
-  },
-  "links": {
-    "CSV": "https://url.of/data.csv",
-    "JSON": "https://url.of/data.json"
-  }
+    "message": "Document updated successfully",
+    "updated_document": {
+        "document_id": "<random UUID>",
+        "document_key": "<file path>",
+        "document_type": "<the type of document>",
+        "extracted_data": {
+            "<key extracted from the document>": {
+                "value": "<updated value extracted from the document>",
+                "confidence": <decimal number 0 - 100 representing how confident the system is in the key and value being correct>
+            }
+            // ...more...
+        }
+    }
 }
 ```
