@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@uswds/uswds": "^3.11.0",
-    "axios": "^1.7.9",
+    "axios": "^1.8.2",
     "dotenv": "^16.4.7",
     "parcel": "^2.13.3",
     "react": "^19.0.0",
