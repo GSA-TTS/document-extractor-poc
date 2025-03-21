@@ -17,18 +17,18 @@
   "license": "ISC",
   "dependencies": {
     "@uswds/uswds": "^3.12.0",
-    "axios": "^1.8.3",
+    "axios": "^1.8.4",
     "dotenv": "^16.4.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.3.0"
+    "react-router": "^7.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "eslint": "^9.22.0",
     "eslint-plugin-react": "^7.37.4",
     "globals": "^16.0.0",
-    "parcel": "^2.14.0",
+    "parcel": "^2.14.1",
     "prettier": "3.5.3",
     "process": "^0.11.10",
     "svgo": "^3.3.2"
