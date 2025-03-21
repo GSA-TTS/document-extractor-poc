@@ -4,6 +4,7 @@ import os
 import boto3
 
 from src.external.ocr.textract import Textract
+from src.forms import supported_forms
 from src.ocr import OcrException
 
 s3_client = boto3.client("s3")
@@ -36,7 +37,7 @@ def lambda_handler(event, context):
     ocr_engine = Textract()
 
     try:
-        document_type = ocr_engine.detect_document_type(f"s3://{bucket_name}/{document_key}")
+        document_text = ocr_engine.extract_raw_text(f"s3://{bucket_name}/{document_key}")
     except OcrException as e:
         exception_message = f"Failed to detect the document type of s3://{bucket_name}/{document_key}: {e}"
         print(exception_message)
@@ -45,8 +46,16 @@ def lambda_handler(event, context):
             "body": json.dumps(exception_message),
         }
 
+    identified_form = None
+
+    for text in document_text:
+        for form in supported_forms:
+            if form.form_matches() in text:
+                identified_form = form
+                break
+
     try:
-        extracted_data = ocr_engine.scan(f"s3://{bucket_name}/{document_key}")
+        extracted_data = ocr_engine.scan(f"s3://{bucket_name}/{document_key}", queries=identified_form.queries())
     except OcrException as e:
         exception_message = f"Failed to extract text from S3 object s3://{bucket_name}/{document_key}: {e}"
         print(exception_message)
@@ -63,7 +72,7 @@ def lambda_handler(event, context):
                 {
                     "document_key": document_key,
                     "extracted_data": extracted_data,
-                    "document_type": document_type,
+                    "document_type": identified_form.identifier(),
                 }
             ),
         )
