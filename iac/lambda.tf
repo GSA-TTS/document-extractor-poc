@@ -9,7 +9,7 @@ resource "aws_lambda_function" "text_extract" {
   filename         = local.lambda_filename
   source_code_hash = local.lambda_source_code_hash
 
-  handler = "src.external.lambdas.text_extractor.lambda_handler"
+  handler = "src.external.aws.lambdas.text_extractor.lambda_handler"
 
   memory_size                    = 256
   timeout                        = 30
@@ -50,7 +50,7 @@ resource "aws_lambda_function" "write_to_dynamodb" {
   filename         = local.lambda_filename
   source_code_hash = local.lambda_source_code_hash
 
-  handler = "src.external.lambdas.sqs_dynamo_writer.lambda_handler"
+  handler = "src.external.aws.lambdas.sqs_dynamo_writer.lambda_handler"
 
   memory_size                    = 256
   timeout                        = 30

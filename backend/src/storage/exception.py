@@ -1,0 +1,2 @@
+class CloudStorageException(Exception):
+    pass

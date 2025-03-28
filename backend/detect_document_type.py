@@ -1,4 +1,4 @@
-from src.external.ocr.textract import Textract
+from src.external.aws.textract import Textract
 
 if __name__ == "__main__":
     scanner = Textract()

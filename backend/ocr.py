@@ -1,5 +1,5 @@
 from src import context
-from src.external.ocr.textract import Textract
+from src.external.aws.textract import Textract
 from src.forms.dd214 import DDTwoOneFour
 from src.ocr import Ocr
 

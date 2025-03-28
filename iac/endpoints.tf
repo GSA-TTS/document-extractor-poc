@@ -7,7 +7,7 @@ module "document_endpoints" {
     {
       name              = "create-document"
       handler_file_path = local.lambda_filename
-      handler_package   = "src.external.lambdas.s3_file_upload.lambda_handler"
+      handler_package   = "src.external.aws.lambdas.s3_file_upload.lambda_handler"
       http_method       = "POST"
     },
   ]
@@ -34,13 +34,13 @@ module "document_id_endpoints" {
     {
       name              = "get-document"
       handler_file_path = local.lambda_filename
-      handler_package   = "src.external.lambdas.get_extracted_document.lambda_handler"
+      handler_package   = "src.external.aws.lambdas.get_extracted_document.lambda_handler"
       http_method       = "GET"
     },
     {
       name              = "update-document"
       handler_file_path = local.lambda_filename
-      handler_package   = "src.external.lambdas.update_extracted_document.lambda_handler"
+      handler_package   = "src.external.aws.lambdas.update_extracted_document.lambda_handler"
       http_method       = "PUT"
     },
   ]

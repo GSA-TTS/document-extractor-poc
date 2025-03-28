@@ -1,6 +1,7 @@
 import json
 import os
 from decimal import Decimal
+from urllib import parse
 
 import boto3
 
@@ -22,8 +23,9 @@ def lambda_handler(event, context):
         try:
             message_body = json.loads(record["body"])
 
-            document_id = convert_document_key_to_id(message_body.get("document_key"))
-            document_key = message_body.get("document_key", "Unknown")
+            document_url = message_body["document_url"]
+            document_id = convert_document_url_to_id(document_url)
+            document_key = convert_document_url_to_key(document_url)
             document_type = message_body.get("document_type", "Unknown")
             extracted_data = message_body.get("extracted_data", {})
 
@@ -66,7 +68,15 @@ def convert_floats_to_decimal(data):
     return data
 
 
-def convert_document_key_to_id(document_key: str):
-    """Converts the key in the form of `input/asdf.jgp` and returns `asdf`."""
+def convert_document_url_to_id(document_url: str):
+    """Converts the key in the form of `s3://bucket_name/input/asdf.jgp` and returns `asdf`."""
+    parsed_url = parse.urlparse(document_url)
+    document_key = parsed_url.path
     base = os.path.basename(document_key)
     return os.path.splitext(base)[0]
+
+
+def convert_document_url_to_key(document_url: str):
+    """Converts the key in the form of `s3://bucket_name/input/asdf.jgp` and returns `input/asdf.jgp`."""
+    parsed_url = parse.urlparse(document_url)
+    return parsed_url.path.lstrip("/")
