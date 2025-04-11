@@ -16,6 +16,23 @@ resource "aws_s3_bucket_notification" "notify_on_input_data" {
   depends_on = [aws_lambda_permission.allow_bucket_invoke]
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "document_storage_lifecycles" {
+  bucket = aws_s3_bucket.document_storage.id
+
+  rule {
+    id     = "delete-uploaded-documents"
+    status = "Enabled"
+
+    filter {
+      prefix = "input/"
+    }
+
+    expiration {
+      days = 31
+    }
+  }
+}
+
 resource "aws_s3_bucket" "website_storage" {
   bucket = "${local.project}-${var.environment}-website"
 

@@ -57,7 +57,7 @@ __Steal the raw, uploaded documents__
   - Have access to AWS.
     - [x] Protected by two-factor authentication and only specific individuals are given access.
   - [x] Public access is completely disabled on the bucket.
-  - [ ] Set a lifecycle policy to delete documents after a period of time.
+  - [x] Set a lifecycle policy to delete documents after a period of time.
 - Change the code to exfiltrate the raw document.
   - Have access to GitHub.
     - [x] GSA requires a user have a GSA e-mail, which requires a background check.

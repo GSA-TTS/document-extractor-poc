@@ -96,7 +96,7 @@ __Steal the raw, uploaded documents__
   - Have access to AWS.
     - [x] Protected by two-factor authentication and only specific individuals are given access.
   - [x] Public access is completely disabled on the bucket.
-  - [ ] Set a lifecycle policy to delete documents after a period of time.
+  - [x] Set a lifecycle policy to delete documents after a period of time.
 - Change the code to exfiltrate the raw document.
   - Have access to GitHub.
     - [x] GSA requires a user have a GSA e-mail, which requires a background check.
@@ -121,7 +121,7 @@ flowchart TD
           D1---E1(Have access to AWS.):::condition
             E1-- mitigated by ---F1(Protected by two-factor authentication and only specific individuals are given access.):::condition
           D1-- mitigated by ---E2(Public access is completely disabled on the bucket.):::condition
-          D1-. mitigated by .-E3(Set a lifecycle policy to delete documents after a period of time.):::condition
+          D1-- mitigated by ---E3(Set a lifecycle policy to delete documents after a period of time.):::condition
       B1---C2(Change the code to exfiltrate the raw document.):::condition
         C2---D2(Have access to GitHub.):::condition
           D2---E4(((OR))):::booleanOr
@@ -145,7 +145,7 @@ flowchart TD
   classDef booleanOr fill:#4a3dff,color:#ffffff,stroke:#ffffff,stroke-width:2px
   style F1 stroke:#4a3dff,stroke-width:2px,fill:#0c0b0e,color:#ffffff,stroke:#3e3b4e,stroke-width:2px
   style E2 stroke:#4a3dff,stroke-width:2px,fill:#0c0b0e,color:#ffffff,stroke:#3e3b4e,stroke-width:2px
-  style E3 stroke:#4a3dff,stroke-width:2px
+  style E3 stroke:#4a3dff,stroke-width:2px,fill:#0c0b0e,color:#ffffff,stroke:#3e3b4e,stroke-width:2px
   style F2 stroke:#4a3dff,stroke-width:2px,fill:#0c0b0e,color:#ffffff,stroke:#3e3b4e,stroke-width:2px
   style F3 stroke:#4a3dff,stroke-width:2px,fill:#0c0b0e,color:#ffffff,stroke:#3e3b4e,stroke-width:2px
   style F4 stroke:#4a3dff,stroke-width:2px,fill:#0c0b0e,color:#ffffff,stroke:#3e3b4e,stroke-width:2px
