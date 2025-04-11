@@ -19,13 +19,12 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket         = "document-extractor-terraform-state"
-    key            = ""
-    region         = "us-east-1"
-    dynamodb_table = "terraform_lock"
+    region = "us-east-1"
   }
 }
 
 locals {
   project = "document-extractor"
 }
+
+data "aws_caller_identity" "current" {}

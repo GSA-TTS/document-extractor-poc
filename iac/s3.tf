@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "document_storage" {
-  bucket = "${local.project}-${var.environment}-documents"
+  bucket = "${local.project}-${var.environment}-documents-${data.aws_caller_identity.current.account_id}"
 
   force_destroy = false
 }
@@ -17,7 +17,7 @@ resource "aws_s3_bucket_notification" "notify_on_input_data" {
 }
 
 resource "aws_s3_bucket" "website_storage" {
-  bucket = "${local.project}-${var.environment}-website"
+  bucket = "${local.project}-${var.environment}-website-${data.aws_caller_identity.current.account_id}"
 
   force_destroy = true
 }
