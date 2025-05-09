@@ -3,6 +3,7 @@ from unittest import mock
 import pytest
 
 from src import context
+from src.database.data.document_item import DocumentItem
 from src.database.database import Database
 from src.database.exception import DatabaseException
 from src.documents import get_document
@@ -75,8 +76,11 @@ def test_get_document_works():
     """The whole flow works and returns expected data."""
 
     mock_database = mock.MagicMock()
-    expected_document_info = {"document_url": "The direct URL of the document"}
-    mock_database.get_document.return_value = expected_document_info
+    document_id = "document ID of wonder"
+    document_url = "The direct URL of the document"
+    expected_document_info = DocumentItem(document_id, document_url)
+    mocked_document_info = {"document_id": document_id, "document_url": document_url}
+    mock_database.get_document.return_value = mocked_document_info
     context.register(Database, mock_database)
 
     mock_cloud_storage = mock.MagicMock()
@@ -86,7 +90,7 @@ def test_get_document_works():
     mock_cloud_storage.get_file.return_value = expected_document_data
     context.register(CloudStorage, mock_cloud_storage)
 
-    document_info, storage_access_url, document_data = get_document.get_document("document ID of wonder")
+    document_info, storage_access_url, document_data = get_document.get_document(expected_document_info.document_id)
 
     assert document_info == expected_document_info
     assert storage_access_url == expected_access_url
