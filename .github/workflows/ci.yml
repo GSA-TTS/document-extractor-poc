@@ -80,9 +80,22 @@ jobs:
           working-directory: backend
           enable-cache: true
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ./ui/package.json
+          cache: npm
+          cache-dependency-path: ./ui/package-lock.json
+
       - name: Python unit testing
         working-directory: ./backend/
         run: uv run pytest
+
+      - working-directory: ./ui/
+        run: npm ci
+
+      - name: JavaScript unit testing
+        working-directory: ./ui/
+        run: npm test
 
 
   build:

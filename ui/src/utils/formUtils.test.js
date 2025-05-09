@@ -1,4 +1,6 @@
-const { shouldUseTextarea } = require('../utils/formUtils');
+import { describe, expect, it } from '@jest/globals';
+
+import { shouldUseTextarea } from './formUtils';
 
 describe('shouldUseTextarea', () => {
   it('returns true if value contains a newline', () => {
