@@ -11,3 +11,7 @@ class Database(ABC):
     @abstractmethod
     def write_document(self, document: DocumentItem):
         pass
+
+    @abstractmethod
+    def update_document(self, document_id: str, document_data: dict) -> DocumentItem:
+        pass

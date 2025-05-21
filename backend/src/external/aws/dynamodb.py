@@ -36,6 +36,22 @@ class DynamoDb(Database):
         except Exception as e:
             raise DatabaseException("Failed to write the document") from e
 
+    def update_document(self, document_id: str, document_data: dict) -> DocumentItem | None:
+        dynamodb_data = self._marshal_dynamodb_json(document_data)
+        try:
+            response = self.dynamodb_client.update_item(
+                TableName=self.table,
+                Key={"document_id": document_id},
+                UpdateExpression="SET extracted_data = :new_data",
+                ExpressionAttributeValues={":new_data": dynamodb_data},
+                ReturnValues="ALL_NEW",
+            )
+            unmarshalled_item = self._unmarshal_dynamodb_json(response.get("Attributes", {}))
+            updated_document_item = DocumentItem(**unmarshalled_item)
+            return updated_document_item
+        except Exception as e:
+            raise DatabaseException("Failed to update the document") from e
+
     def _unmarshal_dynamodb_json(self, dynamodb_data: dict[str, Any]) -> dict[str, Any]:
         deserialized_data = {k: self.deserializer.deserialize(v) for k, v in dynamodb_data.items()}
         return self._convert_from_decimal(deserialized_data)

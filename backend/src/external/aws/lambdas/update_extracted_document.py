@@ -5,8 +5,14 @@ from decimal import Decimal
 
 import boto3
 
+from src.context import ApplicationContext
+from src.database.database import Database
+from src.documents import update_document
+from src.external.aws.dynamodb import DynamoDb
 from src.logging_config import setup_logger
 
+appContext = ApplicationContext()
+appContext.register(Database, DynamoDb())
 dynamodb = boto3.resource("dynamodb")
 DYNAMODB_TABLE = os.getenv("DYNAMODB_TABLE")
 
@@ -42,29 +48,20 @@ def lambda_handler(event, context):
                 "body": json.dumps({"error": "Missing document_id or extracted_data in request"}),
             }
 
-        cleaned_data = convert_to_dynamodb_format(new_extracted_data)
+        updated_document_item = update_document.update_document(document_id, new_extracted_data)
 
-        table = dynamodb.Table(DYNAMODB_TABLE)
-        response = table.update_item(
-            Key={"document_id": document_id},
-            UpdateExpression="SET extracted_data = :new_data",
-            ExpressionAttributeValues={":new_data": cleaned_data},
-            ReturnValues="ALL_NEW",
-        )
-
-        logging.info(f"Update Response: {response}")
-
-        updated_item = response.get("Attributes", {})
+        response = {
+            "message": "Document updated successfully",
+            "status": updated_document_item.status,
+            "document_id": document_id,
+            "document_key": updated_document_item.document_url,
+            "document_type": updated_document_item.document_type,
+            "extracted_data": updated_document_item.extracted_data,
+        }
 
         return {
             "statusCode": 200,
-            "body": json.dumps(
-                {
-                    "message": "Document updated successfully",
-                    "updated_document": updated_item,
-                },
-                default=str,
-            ),
+            "body": json.dumps(response),
         }
 
     except Exception as e:
