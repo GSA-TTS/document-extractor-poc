@@ -1,9 +1,6 @@
 import json
 import logging
-import os
 from decimal import Decimal
-
-import boto3
 
 from src.context import ApplicationContext
 from src.database.database import Database
@@ -13,27 +10,8 @@ from src.logging_config import setup_logger
 
 appContext = ApplicationContext()
 appContext.register(Database, DynamoDb())
-dynamodb = boto3.resource("dynamodb")
-DYNAMODB_TABLE = os.getenv("DYNAMODB_TABLE")
 
 setup_logger()
-
-
-def convert_to_dynamodb_format(data):
-    """Ensures all float values are converted to decimal for DynamoDB storage."""
-
-    def replace_floats(obj):
-        """Recursively convert all float values to decimal to ensure DynamoDB compatibility."""
-        if isinstance(obj, float):
-            return Decimal(str(obj))
-        elif isinstance(obj, dict):
-            return {k: replace_floats(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [replace_floats(i) for i in obj]
-        else:
-            return obj
-
-    return replace_floats(data)
 
 
 def lambda_handler(event, context):
