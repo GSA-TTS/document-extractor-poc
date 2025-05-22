@@ -41,13 +41,12 @@ class DynamoDb(Database):
         try:
             response = self.dynamodb_client.update_item(
                 TableName=self.table,
-                Key={"document_id": document_id},
+                Key={"document_id": {"S": document_id}},
                 UpdateExpression="SET extracted_data = :new_data",
-                ExpressionAttributeValues={":new_data": dynamodb_data},
+                ExpressionAttributeValues={":new_data": {"M": dynamodb_data}},
                 ReturnValues="ALL_NEW",
             )
-            unmarshalled_item = self._unmarshal_dynamodb_json(response.get("Attributes", {}))
-            updated_document_item = DocumentItem(**unmarshalled_item)
+            updated_document_item = DocumentItem(**response.get("Attributes", {}))
             return updated_document_item
         except Exception as e:
             raise DatabaseException("Failed to update the document") from e
