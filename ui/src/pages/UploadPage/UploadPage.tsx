@@ -1,79 +1,13 @@
-import React, { useState, useRef } from 'react';
-import Layout from '../components/Layout';
-import { authorizedFetch, NewDocumentResponse } from '../utils/api';
-import { useNavigate } from 'react-router';
+import Layout from '../../components/Layout';
+import { useUploadPage } from './useUploadPage';
 
 interface UploadPageProps {
   signOut: () => Promise<void>;
 }
 
-type AlertType = 'error' | 'success';
-
 export default function UploadPage({ signOut }: UploadPageProps) {
-  // state for alert messages
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [alertType, setAlertType] = useState<AlertType>('success');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const navigate = useNavigate();
-
-  function showAlert(message: string, type: AlertType) {
-    setAlertMessage(message);
-    setAlertType(type);
-  }
-
-  // handle form submission
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const file = fileInputRef.current?.files?.[0];
-
-    if (!file) {
-      showAlert('Please select a file to upload!', 'error');
-      return;
-    }
-
-    // read the file as Base64
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-
-    reader.onload = async function () {
-      const base64Result = reader.result as string;
-      const base64File = base64Result.split(',')[1];
-      const requestBody = {
-        file_content: base64File,
-        file_name: file.name,
-      };
-
-      try {
-        const apiUrl = '/api/document';
-        const response = await authorizedFetch(apiUrl, {
-          method: 'POST',
-          body: JSON.stringify(requestBody),
-        });
-
-        if (response.ok) {
-          const data = (await response.json()) as NewDocumentResponse;
-          sessionStorage.setItem('documentId', data.documentId);
-          showAlert('File uploaded successfully!', 'success');
-          navigate('/verify-document');
-        } else if (response.status === 401 || response.status === 403) {
-          showAlert(
-            'You are no longer signed in!  Please sign in again.  You will be navigated to the sign in page in a few seconds.',
-            'error'
-          );
-          setTimeout(() => {
-            signOut();
-          }, 5000);
-        } else {
-          showAlert('File failed to upload!', 'error');
-        }
-      } catch (error) {
-        console.error('Upload failed:', error);
-        showAlert('An error occurred while uploading!', 'error');
-      }
-    };
-  }
+  const { alertMessage, alertType, fileInputRef, handleSubmit } =
+    useUploadPage(signOut);
 
   return (
     <Layout signOut={signOut}>
